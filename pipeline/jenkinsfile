@@ -1,0 +1,54 @@
+pipeline {
+  agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '25'))
+    disableResume()
+    timeout(time: 1, unit: 'HOURS')
+  }
+  parameters {
+    booleanParam(
+      name: 'WARM_UP',
+      defaultValue: false,
+      description: 'Please check this if you want to reload configuration on Jenkins without executing the job.'
+    )
+    choice(
+      name: 'ENVIRONNEMENT',
+      choices: ['parametrage', 'recette', 'homol', 'prod'],
+       description: 'Scenario(s) à exectuter '
+    )
+    string(
+      name: 'BRANCH',
+      defaultValue: 'exemple_robot',
+      description: 'Branche du projet robot à lancer.'
+    )
+  }
+  stages {
+    stage('Warm-Up') {
+      when { expression{ return params.WARM_UP } }
+      steps {
+        script {
+          currentBuild.displayName = "${env.BUILD_NUMBER} Warm-Up | Pipeline Update"
+        }
+      }
+    }
+    stage('Change displayName'){
+      when { expression{ return !params.WARM_UP } }
+      steps {
+        script {
+          currentBuild.displayName = "${env.BUILD_NUMBER} - Test Financo"
+        }
+      }
+    }
+    stage('Construction de la commande Robot'){
+      when { expression{ return !params.WARM_UP } }
+      steps {
+        script {
+          dir('container'){
+            sh(label: "pull image docker", script: "docker login -u ms189 -p xperia20 docker-registry.s.arkea.com")
+          }
+        }
+      }
+    }
+
+  }
+}
