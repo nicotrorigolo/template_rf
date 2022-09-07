@@ -1,57 +1,44 @@
-# FROM python:3.11-rc-slim-buster
-FROM docker-registry.s.arkea.com/debian:latest
+# FROM python:slim-buster
+FROM python:3.11-rc-slim-buster
 
-ARG DEBIAN_FRONTEND=noninteractive
+ARG DEBIAN_FRONTEND=noninteractive 
 
-ENV CHROME_VERSION=99.0.4844.84
-ENV GECKODRIVER=v0.31.0
+RUN apt-get -y update
+RUN apt-get -y upgrade
 
-RUN apt-get update \
-&& apt-get install --no-install-recommends -y \
-    wget \
-    curl \
-    unzip \
-    openssh-client \
-    firefox-esr \
-    xvfb \
-    xsel \
-    libncurses5 \
-    libxml2-dev \
-    libxslt-dev \
-    libz-dev \
-    xclip \
-    make \
-    jq \
-&& rm -rf /var/lib/apt/lists/*  \
-&& apt-get clean && apt-get autoremove -y
-
-# Install Robotframework.
-RUN pip3 install --upgrade \
+# Install Robotframework et librarie
+RUN pip install  \
     robotframework \
-    robotframework-pabot \
-    robotframework-seleniumlibrary \
-    robotframework-debuglibrary \
-    robotframework-excellib \
-    robotframework-requests \
-    pyyaml
+    robotframework-seleniumlibrary
 
-# Install google chrome and chrome driver
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-&& echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
-&& apt-get update \
-&& apt-get install --no-install-recommends -y \
-   google-chrome-stable \
-&& rm -rf /var/lib/apt/lists/*  \
-&& apt-get clean && apt-get autoremove -y \
-&& CHROMEDRIVER_VERSION=`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION` \
-&& wget -q "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip" -O /tmp/chromedriver.zip \
-&& unzip /tmp/chromedriver.zip -d /usr/bin/ \
-&& rm -rf /tmp/chromedriver.zip
+# Install dependencies of Chrome driver and chrome
+RUN apt-get install -y libnss3 libdbus-1-dev xdg-utils libgbm1 libasound2 fonts-liberation xvfb wget unzip
 
-# Install firefox driver (gecko).
-RUN wget -q "https://github.com/mozilla/geckodriver/releases/download/$GECKODRIVER/geckodriver-$GECKODRIVER-linux64.tar.gz" \
-&& tar -x geckodriver -zf geckodriver-$GECKODRIVER-linux64.tar.gz -O > /usr/bin/geckodriver \
-&& chmod +x /usr/bin/geckodriver \
-&& rm -rf geckodriver-$GECKODRIVER-linux64.tar.gz
+# Install google-chrome-driver
+RUN wget -q https://chromedriver.storage.googleapis.com/105.0.5195.52/chromedriver_linux64.zip
+RUN unzip chromedriver_linux64.zip \
+    && rm chromedriver_linux64.zip
+RUN mv chromedriver bin
 
-WORKDIR /data
+# (Optional) Start dbus in WSL, see https://github.com/microsoft/WSL/issues/376#issuecomment-295933508
+# RUN /etc/init.d/dbus start
+
+# Install google-chrome
+RUN apt-get install -y wget
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+RUN rm -f google-chrome-stable_current_amd64.deb
+
+# Mise en place espace de travail (workdir)
+WORKDIR /robots
+VOLUME [ "/robots" ]
+
+RUN apt-get install -y git
+RUN apt-get install -y nano
+
+# RUN git clone https://github.com/nicotrorigolo/robot_jenkins.git
+# RUN mv robot_jenkins/tests/test_robot_google.robot .
+# RUN mv robot_jenkins/tests/aaa.robot .
+
+# CMD ["sleep", "3600"]
+# CMD ["robot"]
