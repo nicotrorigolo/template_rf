@@ -32,7 +32,7 @@ RUN rm -f google-chrome-stable_current_amd64.deb
 
 # Mise en place espace de travail (workdir)
 WORKDIR /robots
-VOLUME [ "/robots" ]
+# VOLUME [ "/robots" ]
 
 RUN apt-get install -y git
 RUN apt-get install -y nano
