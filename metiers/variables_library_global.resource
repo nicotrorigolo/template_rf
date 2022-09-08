@@ -18,9 +18,9 @@ Resource        %{WORKSPACE}/application/commun.resource
 Resource        %{WORKSPACE}/application/parcours/test_auto.resource
 
 *** Variables ***
-${EXCEL_FILE_CHEMIN}            %{WORKSPACE}\\JDD.xlsx
+${EXCEL_FILE_CHEMIN}            %{WORKSPACE}/JDD.xlsx
 ${COLONNE_INUTILE}              2
-${ROBOT_DEPLOY_CHEMIN}          %{WORKSPACE}\\application\\template\\data_template.robot
+${ROBOT_DEPLOY_CHEMIN}          %{WORKSPACE}/application/template/data_template.robot
 # Squad dispo : marvel	partenaire	back_vente
 ${SQUAD}                        marvel
 # feuille dispo : amaris  espace_partenaire  contact  back_office
