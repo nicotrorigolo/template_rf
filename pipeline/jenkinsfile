@@ -8,6 +8,7 @@ pipeline {
     agent {
         docker { 
             image 'nicorigolo/robotframework_linux:latest' 
+            args '-e WORKSPACE=/robots/template_rf'
         }
     }
     stages {
