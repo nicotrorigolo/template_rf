@@ -9,7 +9,8 @@ RUN apt-get -y upgrade
 # Install Robotframework et librarie
 RUN pip install  \
     robotframework \
-    robotframework-seleniumlibrary
+    robotframework-seleniumlibrary \
+    robotframework-excellib
 
 # Install dependencies of Chrome driver and chrome
 RUN apt-get install -y libnss3 libdbus-1-dev xdg-utils libgbm1 libasound2 fonts-liberation xvfb wget unzip
