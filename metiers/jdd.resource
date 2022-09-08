@@ -94,8 +94,12 @@ Initialisation du navigateur
     ${prefs} =              Create Dictionary   download.default_directory=${DOWNLOAD_DIR}
     ...                                 download.prompt_for_download=false
     Call Method     ${chromeOptions}    add_experimental_option    prefs    ${prefs}
-    Call Method     ${chromeOptions}    add_argument    --headless
-    Call Method     ${chromeOptions}    add_argument    --disable-gpu
+    # Call Method     ${chromeOptions}    add_argument    --headless
+    # Call Method     ${chromeOptions}    add_argument    --disable-gpu
+    Call Method    ${chromeOptions}    add_argument    --headless
+    Call Method    ${chromeOptions}    add_argument    --no-sandbox
+    Call Method    ${chromeOptions}    add_argument    --disable-gpu
+    Call Method    ${chromeOptions}    add_argument    --disable-dev-shm-usage
     SeleniumLibrary.Open Browser        url=${url}
     ...                                 browser=chrome
     ...                                 options=${chromeOptions}
