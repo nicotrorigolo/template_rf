@@ -14,12 +14,10 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                dir('tests') {
-                    sh "pwd"
-                    sh 'ls -all'
-                    sh 'robot data_driven.robot'
-                    sh 'robot testSuiteGenerated.robot'
-                }
+                  sh "pwd"
+                  sh 'ls -all'
+                  sh 'robot data_driven.robot'
+                  sh 'robot testSuiteGenerated.robot'
             }
         }
     }
