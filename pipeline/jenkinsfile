@@ -1,23 +1,20 @@
-node {  
-    stage('verif') { 
-        sh 'ls -all'
-    }
-}
-
 pipeline {
     agent {
         docker { 
             image 'nicorigolo/robotframework_linux:latest' 
-            args '-e WORKSPACE=/robots/template_rf'
         }
     }
     stages {
         stage('Test') {
             steps {
-                  sh "pwd"
-                  sh 'ls -all'
-                  sh 'robot data_driven.robot'
-                  sh 'robot testSuiteGenerated.robot'
+                sh "pwd"
+                sh 'ls -all'
+                dir('metiers') {
+                    sh "pwd"
+                    sh 'ls -all'                  
+                    sh 'robot data_driven.robot'
+                    sh 'robot testSuiteGenerated.robot'
+                }
             }
         }
     }
