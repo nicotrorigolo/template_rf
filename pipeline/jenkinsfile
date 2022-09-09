@@ -23,20 +23,20 @@ pipeline {
                 }
             }
         }
-    }
-    post {
-        always {
-            step ([
-			    $class              : 'RobotPublisher',
-			    outputPath          : 'metiers/',
-			    outputFileName      : 'output.xml',
-			    reportFileName      : 'report.html',
-			    logFileName         : 'log.html',
-			    disableArchiveOutput: false,
-			    passThreshold       : 100,
-			    unstableThreshold   : 75,
-			    otherFiles          : "*.png,*.jpg",
-            ])
+        stage('Traitement des resultats') {
+            steps {
+                step ([
+        	    $class              : 'RobotPublisher',
+        		outputPath          : 'metiers/',
+        		outputFileName      : 'output.xml',
+        		reportFileName      : 'report.html',
+        		logFileName         : 'log.html',
+        		disableArchiveOutput: false,
+        		passThreshold       : 100,
+        		unstableThreshold   : 75,
+        		otherFiles          : "*.png,*.jpg",
+                ])
+            }
         }
     }
 }
