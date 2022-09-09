@@ -2,20 +2,23 @@ pipeline {
     options {
         skipDefaultCheckout(true)
     }
+    triggers { 
+        pollSCM "*/1****" 
+    }
     agent {
         docker { 
-            image 'nicorigolo/robotframework_linux:latest' 
+            image "nicorigolo/robotframework_linux:latest" 
         }
     }
     stages {
-        stage('Recuperation du code') {
+        stage("Recuperation du code") {
             steps {
                 checkout scm
             }
         }
-        stage('Tests auto') {
+        stage("Tests auto") {
             steps {
-                dir('metiers') {
+                dir("metiers") {
                     echo "Generation du testSuiteGenerated.robot"
                     sh "robot data_driven.robot"
                     echo "Lancement des tests auto"
@@ -23,14 +26,14 @@ pipeline {
                 }
             }
         }
-        stage('Traitement des resultats') {
+        stage("Traitement des resultats") {
             steps {
                 step ([
-        	    $class              : 'RobotPublisher',
-        		outputPath          : 'metiers/',
-        		outputFileName      : 'output.xml',
-        		reportFileName      : 'report.html',
-        		logFileName         : 'log.html',
+        	    $class              : "RobotPublisher",
+        		outputPath          : "metiers/",
+        		outputFileName      : "output.xml",
+        		reportFileName      : "report.html",
+        		logFileName         : "log.html",
         		disableArchiveOutput: false,
         		passThreshold       : 100,
         		unstableThreshold   : 75,
