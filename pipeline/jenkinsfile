@@ -3,7 +3,7 @@ pipeline {
         skipDefaultCheckout(true)
     }
     triggers { 
-        pollSCM "*/1****" 
+        pollSCM "*/1 * * * *" 
     }
     agent {
         docker { 
