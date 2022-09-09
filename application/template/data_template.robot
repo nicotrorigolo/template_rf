@@ -17,7 +17,8 @@ Debut du test case
     commun.Initialisation Des Variables Du Test
     #commun.verifier compte non bloque
     test_auto.Connexion au site de Google
-
+    Log    ${variable_1}
+    Log    ${variable_2}
 
 
 
