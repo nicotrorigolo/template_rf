@@ -1,21 +1,42 @@
 pipeline {
+    options {
+        skipDefaultCheckout(true)
+    }
     agent {
         docker { 
             image 'nicorigolo/robotframework_linux:latest' 
         }
     }
     stages {
-        stage('Test') {
+        stage('Recuperation du code') {
             steps {
-                sh "pwd"
-                sh 'ls -all'
+                checkout scm
+            }
+        }
+        stage('Tests auto') {
+            steps {
                 dir('metiers') {
-                    sh "pwd"
-                    sh 'ls -all'                  
-                    sh 'robot data_driven.robot'
-                    sh 'robot testSuiteGenerated.robot'
+                    echo "Generation du testSuiteGenerated.robot"
+                    sh "robot data_driven.robot"
+                    echo "Lancement des tests auto"
+                    sh "robot testSuiteGenerated.robot"
                 }
             }
+        }
+    }
+    post {
+        always {
+            step ([
+			    $class              : 'RobotPublisher',
+			    outputPath          : 'metiers/',
+			    outputFileName      : 'output.xml',
+			    reportFileName      : 'report.html',
+			    logFileName         : 'log.html',
+			    disableArchiveOutput: false,
+			    passThreshold       : 100,
+			    unstableThreshold   : 75,
+			    otherFiles          : "*.png,*.jpg",
+            ])
         }
     }
 }
