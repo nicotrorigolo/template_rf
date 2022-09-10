@@ -7,7 +7,8 @@ pipeline {
     }
     agent {
         docker { 
-            image "nicorigolo/robotframework_linux:latest" 
+            image "nicorigolo/robotframework_linux:latest"
+            args "-e EXCEL_SHEET=feuille_jdd"
         }
     }
     stages {
