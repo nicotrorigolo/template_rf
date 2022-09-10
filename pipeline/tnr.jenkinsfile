@@ -3,7 +3,7 @@ pipeline {
         skipDefaultCheckout(true)
     }
     triggers { 
-        cron("*/1 * * * *")
+        cron("0 0 1 * *	")
     }
     agent {
         docker { 
